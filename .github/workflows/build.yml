@@ -1,21 +1,32 @@
 name: Build APK
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # Увеличиваем время ожидания
+
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-    - name: Install dependencies
+    
+    - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y git unzip openjdk-17-jdk python3-dev
+        sudo apt-get install -y \
+          git unzip openjdk-17-jdk \
+          python3-dev autoconf libtool \
+          pkg-config zlib1g-dev
+        
+    - name: Install Buildozer
+      run: pip install buildozer cython==0.29.19
+        
     - name: Build APK
       run: |
-        pip install buildozer
         echo "[app]
         title = MyClicker
         package.name = myclicker
@@ -26,9 +37,12 @@ jobs:
         requirements = python3,kivy==2.1.0
         android.accept_sdk_license = True
         android.ndk = 19c" > buildozer.spec
+        
         buildozer -v android debug
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
+        
+    - name: Upload APK (FIXED)
+      uses: actions/upload-artifact@v4  # Исправлено с v3 на v4!
       with:
         name: app
         path: bin/*.apk
+        retention-days: 1  # Автоудаление через 1 день
