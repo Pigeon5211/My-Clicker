@@ -1,0 +1,33 @@
+<ClickerLayout>:
+    orientation: "vertical"
+    padding: 90
+    spacing: 10
+
+    Label:
+        text: f"{root.clicks}"
+        font_size: 200
+
+    Button:
+        text: "ЖМИ!"
+        font_size: 200
+        background_color: (0, 0.7, 0.3, 1)
+        on_press:
+        	root.on_button_click()
+        	self.background_color = (0, 0.73, 0.33, 1)
+    	on_release:
+        	self.background_color = (0, 0.7, 0.3, 1)
+    Button:
+    	text: "сбросить"
+    	font_size: 150
+    	background_color: (1, 0.08, 0.08, 1)
+    	on_press:
+    		root.reset()
+    		self.background_color: (1, 0.07, 0.07, 1)
+    	on_release:
+    		self.background_color: (1, 0.08, 0.08, 1)
+    Button:
+    	text: f"прокачать: {root.upgrade_cost}"
+    	font_size: 100
+    	on_press:
+    		root.upgrade()
+    		
